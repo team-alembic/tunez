@@ -1,5 +1,16 @@
 defmodule Tunez.Accounts do
+  @moduledoc """
+  The Accounts domain manages user authentication, authorization, and notifications.
+
+  This domain handles user registration, sign in, password management, role-based
+  permissions, and notifications about new album releases from followed artists.
+  """
+
   use Ash.Domain, otp_app: :tunez, extensions: [AshGraphql.Domain, AshJsonApi.Domain]
+
+  domain do
+    description @moduledoc
+  end
 
   graphql do
     queries do

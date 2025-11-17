@@ -20,6 +20,10 @@ defmodule Tunez.Music.ArtistFollower do
     end
   end
 
+  resource do
+    description "A join resource representing a user following an artist."
+  end
+
   actions do
     defaults [:read]
 

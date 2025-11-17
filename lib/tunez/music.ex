@@ -1,5 +1,16 @@
 defmodule Tunez.Music do
+  @moduledoc """
+  The Music domain manages artists, albums, tracks, and artist followers.
+
+  This domain provides functionality for browsing music content, managing artist
+  information, and tracking which artists users follow.
+  """
+
   use Ash.Domain, otp_app: :tunez, extensions: [AshGraphql.Domain, AshJsonApi.Domain, AshPhoenix]
+
+  domain do
+    description @moduledoc
+  end
 
   graphql do
     queries do

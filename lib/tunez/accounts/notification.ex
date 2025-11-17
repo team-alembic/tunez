@@ -16,6 +16,10 @@ defmodule Tunez.Accounts.Notification do
     end
   end
 
+  resource do
+    description "A notification sent to a user when a followed artist releases a new album."
+  end
+
   actions do
     defaults [:read, :destroy]
 

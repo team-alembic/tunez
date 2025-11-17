@@ -67,6 +67,10 @@ defmodule Tunez.Accounts.User do
     repo Tunez.Repo
   end
 
+  resource do
+    description "A user account with authentication and role-based permissions."
+  end
+
   actions do
     defaults [:read]
 

@@ -122,4 +122,14 @@ defmodule TunezWeb.Router do
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end
+
+  if Application.compile_env(:tunez, :dev_routes) do
+    import Clarity.Router
+
+    scope "/clarity" do
+      pipe_through :browser
+
+      clarity "/"
+    end
+  end
 end

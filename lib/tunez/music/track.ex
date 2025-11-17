@@ -26,6 +26,10 @@ defmodule Tunez.Music.Track do
     end
   end
 
+  resource do
+    description "An individual song on an album."
+  end
+
   actions do
     defaults [:read, :destroy]
 

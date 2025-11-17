@@ -1,5 +1,6 @@
 [
   import_deps: [
+    :clarity,
     :ash_authentication_phoenix,
     :ash_authentication,
     :ash_graphql,

@@ -24,6 +24,10 @@ defmodule Tunez.Music.Album do
     end
   end
 
+  resource do
+    description "A collection of tracks released by an artist."
+  end
+
   actions do
     defaults [:read]
 
