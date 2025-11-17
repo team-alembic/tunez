@@ -34,6 +34,7 @@ defmodule Tunez.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:ash_ai, "~> 0.3"},
       {:ash_diagram, "~> 0.2"},
       {:clarity, "~> 0.4"},
       {:ash_authentication_phoenix, "~> 2.0"},
