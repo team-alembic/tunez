@@ -42,26 +42,11 @@ defmodule Tunez.Music.Artist do
     default_accept [:name, :biography]
 
     action :search_widget, :string do
-      run fn input, _context ->
-        html = """
-        <div style="font-family: system-ui, sans-serif; padding: 1rem; border: 1px solid #e5e7eb; border-radius: 0.5rem; max-width: 24rem;">
-          <h3 style="margin-top: 0; font-size: 1.125rem; font-weight: 600;">Artist Search</h3>
-          <form style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
-            <input 
-              type="text" 
-              name="query" 
-              placeholder="Search artists..." 
-              style="flex: 1; padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 0.375rem;"
-            />
-            <button 
-              type="submit"
-              style="background-color: #2563eb; color: white; padding: 0.5rem 1rem; border: none; border-radius: 0.375rem; cursor: pointer;"
-            >
-              Search
-            </button>
-          </form>
-        </div>
-        """
+      run fn _input, _context ->
+        html =
+          TunezWeb.ArtistWidgetHTML.search_widget(%{})
+          |> Phoenix.HTML.Safe.to_iodata()
+          |> IO.iodata_to_binary()
 
         {:ok, html}
       end
@@ -78,7 +63,7 @@ defmodule Tunez.Music.Artist do
 
       filter expr(contains(name, ^arg(:query)))
 
-      pagination offset?: true, default_limit: 12
+      pagination offset?: true, default_limit: 12, countable: :by_default
     end
 
     update :update do

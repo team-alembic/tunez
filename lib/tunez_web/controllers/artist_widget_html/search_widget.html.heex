@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Artist Search</title>
+    <style>
+      .artist-search-widget {
+        font-family: system-ui, sans-serif;
+        padding: 1rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        max-width: 24rem;
+      }
+
+      .artist-search-widget h3 {
+        margin-top: 0;
+        font-size: 1.125rem;
+        font-weight: 600;
+      }
+
+      .artist-search-form {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
+
+      .artist-search-input {
+        flex: 1;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+      }
+
+      .artist-search-button {
+        background-color: #2563eb;
+        color: white;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.375rem;
+        cursor: pointer;
+      }
+
+      .search-results {
+        margin-top: 1rem;
+      }
+
+      .searching-message {
+        color: #6b7280;
+      }
+
+      .no-results-message {
+        color: #6b7280;
+      }
+
+      .error-message {
+        color: #dc2626;
+      }
+
+      .results-container {
+        margin-top: 1rem;
+      }
+
+      .results-heading {
+        margin-top: 0;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #374151;
+      }
+
+      .results-list {
+        list-style: none;
+        padding: 0;
+        margin: 0.5rem 0 0 0;
+      }
+
+      .result-item {
+        padding: 0.5rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .album-count {
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="artist-search-widget">
+      <h3>Artist Search</h3>
+      <form id="artist-search-form" class="artist-search-form">
+        <input
+          id="search-query"
+          type="text"
+          name="query"
+          placeholder="Search artists..."
+          class="artist-search-input"
+        />
+        <button type="submit" class="artist-search-button">
+          Search
+        </button>
+      </form>
+      <div id="search-results" class="search-results"></div>
+    </div>
+    <script>
+      const form = document.getElementById('artist-search-form');
+      const queryInput = document.getElementById('search-query');
+      const resultsDiv = document.getElementById('search-results');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const query = queryInput.value.trim();
+
+        if (!query) {
+          return;
+        }
+
+        try {
+          resultsDiv.innerHTML = '<p class="searching-message">Searching...</p>';
+
+          const toolArgs = {query}
+
+          // Call the search action using window.openai
+          const result = await window.openai.callTool('search_artists', toolArgs)
+          // need to translate the artist types into actual fields!
+          const artists = JSON.parse(result.content[0].text)
+
+          // Display results
+          if (artists.length > 0) {
+            resultsDiv.innerHTML = `
+              <div class="results-container">
+                <h4 class="results-heading">Results (${artists.length})</h4>
+                <ul class="results-list">
+                  ${artists.map(artist => `
+                    <li class="result-item">
+                      <strong>${artist.name}</strong>
+                      ${artist.album_count ? `<span class="album-count"> (${artist.album_count} albums)</span>` : ''}
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+            `;
+          } else {
+            resultsDiv.innerHTML = '<p class="no-results-message">No artists found.</p>';
+          }
+        } catch (error) {
+          console.error('Search error:', error);
+          resultsDiv.innerHTML = `<p class="error-message">Error: ${error.message}</p>`;
+        }
+      });
+    </script>
+  </body>
+</html>
