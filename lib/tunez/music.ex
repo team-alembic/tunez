@@ -6,11 +6,9 @@ defmodule Tunez.Music do
   information, and tracking which artists users follow.
   """
 
-  use Ash.Domain, otp_app: :tunez, extensions: [AshGraphql.Domain, AshJsonApi.Domain, AshPhoenix]
-
-  domain do
-    description @moduledoc
-  end
+  use Ash.Domain,
+    otp_app: :tunez,
+    extensions: [AshGraphql.Domain, AshJsonApi.Domain, AshPhoenix, AshAi]
 
   graphql do
     queries do
@@ -52,6 +50,29 @@ defmodule Tunez.Music do
 
   forms do
     form :create_album, args: [:artist_id]
+  end
+
+  @search_artists_uri "ui://artist/search"
+
+  tools do
+    tool :read_artists, Tunez.Music.Artist, :read
+    tool :create_artist, Tunez.Music.Artist, :create
+    tool :update_artist, Tunez.Music.Artist, :update
+    tool :destroy_artist, Tunez.Music.Artist, :destroy
+
+    tool :search_artists, Tunez.Music.Artist, :search,
+      _meta: %{
+        "openai/outputTemplate" => @search_artists_uri,
+        "openai/toolInvocation/invoking" => "Searching for artists",
+        "openai/toolInvocation/invoked" => "Search complete. Here are your results."
+      }
+  end
+
+  mcp_resources do
+    mcp_resource :search_artists, @search_artists_uri, Tunez.Music.Artist, :search_widget do
+      title "Artist Search"
+      description "Search for an artist UI widget"
+    end
   end
 
   resources do
@@ -109,5 +130,9 @@ defmodule Tunez.Music do
 
       define :followers_for_artist, action: :for_artist, args: [:artist_id]
     end
+  end
+
+  domain do
+    description @moduledoc
   end
 end

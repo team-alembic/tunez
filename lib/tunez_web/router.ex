@@ -72,6 +72,14 @@ defmodule TunezWeb.Router do
     forward "/", TunezWeb.AshJsonApiRouter
   end
 
+  scope "/mcp" do
+    pipe_through [:api]
+
+    forward "/", AshAi.Mcp.Router,
+      protocol_version_statement: "2024-11-05",
+      otp_app: :tunez
+  end
+
   scope "/", TunezWeb do
     pipe_through :browser
 
