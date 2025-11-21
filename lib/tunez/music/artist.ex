@@ -156,11 +156,11 @@ defmodule Tunez.Music.Artist do
       public? true
     end
 
-    first :latest_album_year_released, :albums, :year_released do
+    max :latest_album_year_released, :albums, :year_released do
       public? true
     end
 
-    first :cover_image_url, :albums, :cover_image_url
+    max :cover_image_url, :albums, :cover_image_url
 
     count :follower_count, :follower_relationships do
       public? true
